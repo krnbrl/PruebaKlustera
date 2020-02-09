@@ -1,0 +1,180 @@
+<div *ngIf="identity" class="navigation col-ls-1">
+  <h1>
+    {{tittle}}
+  </h1>
+
+  <span>
+    {{identity.usuario}} 
+  </span>
+
+</div>
+
+<!--Login-->
+<div class="col-lg-12" *ngIf="!identity">  
+  <div class="login-box">
+    <div class="col-lg-6" > 
+      <form (ngSubmit)="onSubmit()" class="col-md-10" #loginForm="ngForm">
+      <h1>Inicia Sesión</h1>
+        <p class="textbox">
+          <input placeholder="Usuario" type="text" #usuario="ngModel" name="usuario" [(ngModel)]="User.usuario" class="form-control" required>   
+          <span *ngIf="!User.valid && User.touched">
+            Por favor, ingresa un usuario.
+          </span>
+        </p>
+
+        <p class="textbox">
+          <input placeholder="Contraseña" type="password" [(ngModel)]="User.password" #password="ngModel" name="password" class="form-control" required>
+        </p>
+
+      <div *ngIf="message_err">
+        <div class="alert alert-warning" role="alert">
+          Usuario o contraseña incorrecta. 
+        </div>
+      </div>      
+
+        <input type="submit" value="Ingresar" class="btn btn-secondary btn-lg btn-block">
+      </form>
+    </div>
+  </div>  
+</div> 
+<!-- Cabecera -->
+<div *ngIf="identity">
+<div>
+  <form #dates="ngForm">
+    <ul class="nav shadow p-3 mb-5 bg-white rounded">
+      <div class="row">
+        <li class="nav-item col-md-3">
+          <span>Periodo:</span>
+          <input type="date" #date1="ngModel" name="date1" [(ngModel)]="this.dates.date1" class="nav-link" class="form-control">
+        </li>
+        <li class="nav-item col-ms-3">
+          <span>_</span>
+          <input type="date" #date2="ngModel" name="date2" [(ngModel)]="this.dates.date2" class="nav-link" class="form-control">
+          <span></span>
+        </li>
+        <li class="nav-item col-md-2">
+          <span>Start hour:</span>
+          <input type="text" #hour1="ngModel" name="hour1" [(ngModel)]="this.dates.hour1"class="nav-link" class="form-control">
+        </li>
+        <li class="nav-item col-md-2">
+          <span>End hour</span>
+        <input type="text" #hour2="ngModel" name="hour2" [(ngModel)]="this.dates.hour2" class="nav-link" class="form-control">
+        </li>
+        <li class="nav-item col-md-2">
+          <input type="button" value="Actualizar" (click)="obtenerDatos(this.dates)" class="nav-link" class="btn btn-primary">
+          
+        </li>
+        <ul class=" container alert alert-danger" *ngIf="messageInfo">
+          <span *ngIf="messageInfo">Todos los campos son obligatorios</span>
+        </ul>
+      </div>        
+    </ul>
+    
+  </form>
+</div>
+<!--KPI'S--> 
+<div class="row">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <span  class="card-title h6">Visitantes unicos</span >
+        <div class="row">
+          <div class="col-8"><p class="card-text h4">{{this.avg_stay}}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <span  class="card-title h6">Visitantes</span >
+        <div class="row">
+          <div class="col-8"><p class="card-text h4">{{this.clients}}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <span  class="card-title h6">%Visitantes unicos</span >
+        <div class="row">
+          <div class="col-8"><p class="card-text h4">{{this.frecuency}}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <span  class="card-title h6">Tiempo promedio</span >
+        <div class="row">
+          <div class="col-8"><p class="card-text h4">{{this.impacts}}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <span  class="card-title h6">UniqueLoyals</span >
+        <div class="row">
+          <div class="col-8"><p class="card-text h4">{{this.loyals}}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <span  class="card-title h6">%LoyaltyVisitors</span >
+        <div class="row">
+          <div class="col-8"><p class="card-text h4">{{this.potencial_clients}}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <span  class="card-title h6">FrecuenciaVisitas</span >
+        <div class="row">
+          <div class="col-8"><p class="card-text h4">{{this.registers}}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <span  class="card-title h6">Pasajeros ocasionales</span >
+        <div class="row">
+          <div class="col-8"><p class="card-text h4">{{this.visits}}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br>
+<br>
+<!--Grafica-->
+<div class="h1 foot">Peatones</div>
+    <div style="display: block">
+      <canvas baseChart
+        [datasets]="barChartData"
+        [labels]="barChartLabels"
+        [options]="barChartOptions"
+        [plugins]="barChartPlugins"
+        [legend]="barChartLegend"
+        [chartType]="barChartType">
+      </canvas>
+    </div>
+<!--Botón de cerrado de sesión -->
+    <input type="submit" value="Salir" class="btn btn-primary btn-lg btn-block" (click)="logOut()">
+      
+
+</div>    
